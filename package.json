@@ -1,0 +1,18 @@
+{
+	"name": "after-every",
+	"version": "1.0.0",
+	"description": "Run a function after every second/minute/hour...",
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
+	"author": "zS1L3NT <zechariahtan144@gmail.com> (http://www.zectan.com)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zS1L3NT/ts-after-every"
+	},
+	"keywords": ["time", "timer", "change", "period", "after"],
+	"dependencies": {},
+	"engines": {
+		"node": ">=0.12"
+	},
+	"engineStrict": true
+}
