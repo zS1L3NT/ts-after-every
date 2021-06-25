@@ -16,7 +16,7 @@ then import the module like either of the two ways below depending on your proje
 import AfterEvery from "after-every"
 
 // Require statements
-const AfterEvery = require("after-every")
+const AfterEvery = require("after-every").default
 ```
 
 ## Usage

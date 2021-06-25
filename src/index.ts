@@ -1,4 +1,7 @@
-const time = (callback: () => void, delay: number) => {
+type TimeoutClearer = () => void
+type InputFunction = () => void
+
+const time = (callback: InputFunction, delay: number) => {
 	let nextTick = new Date().getTime()
 	let canContinue = true
 
@@ -15,68 +18,105 @@ const time = (callback: () => void, delay: number) => {
 	}
 }
 
-const seconds = (triggerEvery: number) => (callback: () => void) => {
-	const interval = 1000 * triggerEvery
+const seconds = (triggerEvery: number) => {
+	/**
+	 * Timeout that gets called every few specified seconds
+	 * @param callback Function to run every period of time
+	 * @returns Function the clears this current interval
+	 */
+	const func = (callback: InputFunction): TimeoutClearer => {
+		const interval = 1000 * triggerEvery
 
-	const date = new Date()
-	const startDelay = interval - date.getMilliseconds()
+		const date = new Date()
+		const startDelay = interval - date.getMilliseconds()
 
-	const timeout = setTimeout(() => {
-		clear = time(callback, interval)
-	}, startDelay)
-	let clear = () => clearTimeout(timeout)
-	return () => clear()
+		const timeout = setTimeout(() => {
+			clear = time(callback, interval)
+		}, startDelay)
+		let clear = () => clearTimeout(timeout)
+		return () => clear()
+	}
+	return func
 }
 
-const minutes = (triggerEvery: number) => (callback: () => void) => {
-	const interval = 60 * 1000 * triggerEvery
+const minutes = (triggerEvery: number) => {
+	/**
+	 * Timeout that gets called every few specified minutes
+	 * @param callback Function to run every period of time
+	 * @returns Function the clears this current interval
+	 */
+	const func = (callback: InputFunction): TimeoutClearer => {
+		const interval = 60 * 1000 * triggerEvery
 
-	const date = new Date()
-	const startDelay =
-		interval - (date.getMilliseconds() + date.getSeconds() * 1000)
+		const date = new Date()
+		const startDelay =
+			interval - (date.getMilliseconds() + date.getSeconds() * 1000)
 
-	const timeout = setTimeout(() => {
-		clear = time(callback, interval)
-	}, startDelay)
-	let clear = () => clearTimeout(timeout)
-	return () => clear()
+		const timeout = setTimeout(() => {
+			clear = time(callback, interval)
+		}, startDelay)
+		let clear = () => clearTimeout(timeout)
+		return () => clear()
+	}
+	return func
 }
 
-const hours = (triggerEvery: number) => (callback: () => void) => {
-	const interval = 60 * 60 * 1000 * triggerEvery
+const hours = (triggerEvery: number) => {
+	/**
+	 * Timeout that gets called every few specified hours
+	 * @param callback Function to run every period of time
+	 * @returns Function the clears this current interval
+	 */
+	const func = (callback: InputFunction): TimeoutClearer => {
+		const interval = 60 * 60 * 1000 * triggerEvery
 
-	const date = new Date()
-	const startDelay =
-		interval -
-		(date.getMilliseconds() +
-			date.getSeconds() * 1000 +
-			date.getMinutes() * 60 * 1000)
+		const date = new Date()
+		const startDelay =
+			interval -
+			(date.getMilliseconds() +
+				date.getSeconds() * 1000 +
+				date.getMinutes() * 60 * 1000)
 
-	const timeout = setTimeout(() => {
-		clear = time(callback, interval)
-	}, startDelay)
-	let clear = () => clearTimeout(timeout)
-	return () => clear()
+		const timeout = setTimeout(() => {
+			clear = time(callback, interval)
+		}, startDelay)
+		let clear = () => clearTimeout(timeout)
+		return () => clear()
+	}
+	return func
 }
 
-const days = (triggerEvery: number) => (callback: () => void) => {
-	const interval = 24 * 60 * 60 * 1000 * triggerEvery
+const days = (triggerEvery: number) => {
+	/**
+	 * Timeout that gets called every few specified days
+	 * @param callback Function to run every period of time
+	 * @returns Function the clears this current interval
+	 */
+	const func = (callback: InputFunction): TimeoutClearer => {
+		const interval = 24 * 60 * 60 * 1000 * triggerEvery
 
-	const date = new Date()
-	const startDelay =
-		interval -
-		(date.getMilliseconds() +
-			date.getSeconds() * 1000 +
-			date.getMinutes() * 60 * 1000 +
-			date.getHours() * 60 * 60 * 1000)
+		const date = new Date()
+		const startDelay =
+			interval -
+			(date.getMilliseconds() +
+				date.getSeconds() * 1000 +
+				date.getMinutes() * 60 * 1000 +
+				date.getHours() * 60 * 60 * 1000)
 
-	const timeout = setTimeout(() => {
-		clear = time(callback, interval)
-	}, startDelay)
-	let clear = () => clearTimeout(timeout)
-	return () => clear()
+		const timeout = setTimeout(() => {
+			clear = time(callback, interval)
+		}, startDelay)
+		let clear = () => clearTimeout(timeout)
+		return () => clear()
+	}
+	return func
 }
 
+/**
+ * Function that gives access to all timers
+ * @param tiggerEvery Trigger the function every few intervals
+ * @returns The possible functions you can call for the intervals
+ */
 const AfterEvery = (tiggerEvery: number) => ({
 	seconds: seconds(tiggerEvery),
 	minutes: minutes(tiggerEvery),
@@ -85,8 +125,3 @@ const AfterEvery = (tiggerEvery: number) => ({
 })
 
 export default AfterEvery
-
-const timer = AfterEvery(1).seconds(() => console.log("A second passed!"))
-setTimeout(() => {
-	timer()
-}, 3000)
