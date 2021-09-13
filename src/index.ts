@@ -1,15 +1,18 @@
 type TimeoutClearer = () => void
-type InputFunction = () => void
+type InputFunction = (date: Date) => void
+
+let timezone = 0
 
 const time = (callback: InputFunction, delay: number) => {
-	let nextTick = new Date().getTime()
+	let nextTick = Date.now()
 	let canContinue = true
 
 	const loop = () => {
 		if (!canContinue) return
+		const date = Date.now()
 		nextTick += delay
-		callback()
-		setTimeout(loop, nextTick - new Date().getTime())
+		callback(new Date(date))
+		setTimeout(loop, nextTick - date)
 	}
 
 	loop()
@@ -101,13 +104,19 @@ const days = (triggerEvery: number) => {
 			(date.getMilliseconds() +
 				date.getSeconds() * 1000 +
 				date.getMinutes() * 60 * 1000 +
-				date.getHours() * 60 * 60 * 1000)
+				addUTC(date.getHours()) * 60 * 60 * 1000)
 
 		const timeout = setTimeout(() => {
 			clear = time(callback, interval)
 		}, startDelay)
 		let clear = () => clearTimeout(timeout)
 		return () => clear()
+	}
+	const addUTC = (hours: number) => {
+		hours += timezone
+		if (hours > 23) hours -= 24
+		if (hours < 0) hours += 24
+		return hours
 	}
 	return func
 }
@@ -124,4 +133,23 @@ const AfterEvery = (tiggerEvery: number) => ({
 	days: days(tiggerEvery)
 })
 
+/**
+ * Change the timezone by placing the UTC value of your timezone.
+ * This function is to help the day function know what time the day starts
+ * for your specific timezone. If not set, defaults to UTC 0
+ *
+ * @param hours UTC value from -12 to 14
+ * @throws Error if UTC is outside range of -12 and 14
+ */
+const set_timezone = (hours: number) => {
+	if (hours >= -12 && hours <= 14) {
+		timezone = hours
+	} else {
+		throw new Error("UTC must be between -12 and 14")
+	}
+}
+
 export default AfterEvery
+export {
+	set_timezone
+}
