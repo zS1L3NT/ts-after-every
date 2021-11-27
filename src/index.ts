@@ -21,14 +21,14 @@ const time = (callback: InputFunction, delay: number) => {
 	}
 }
 
-const seconds = (triggerEvery: number) => {
+const seconds = (trigger_every: number) => {
 	/**
 	 * Timeout that gets called every few specified seconds
 	 * @param callback Function to run every period of time
 	 * @returns Function the clears this current interval
 	 */
 	const func = (callback: InputFunction): TimeoutClearer => {
-		const interval = 1000 * triggerEvery
+		const interval = 1000 * trigger_every
 
 		const date = new Date()
 		const startDelay = interval - date.getMilliseconds()
@@ -42,14 +42,14 @@ const seconds = (triggerEvery: number) => {
 	return func
 }
 
-const minutes = (triggerEvery: number) => {
+const minutes = (trigger_every: number) => {
 	/**
 	 * Timeout that gets called every few specified minutes
 	 * @param callback Function to run every period of time
 	 * @returns Function the clears this current interval
 	 */
 	const func = (callback: InputFunction): TimeoutClearer => {
-		const interval = 60 * 1000 * triggerEvery
+		const interval = 60 * 1000 * trigger_every
 
 		const date = new Date()
 		const startDelay =
@@ -64,14 +64,14 @@ const minutes = (triggerEvery: number) => {
 	return func
 }
 
-const hours = (triggerEvery: number) => {
+const hours = (trigger_every: number) => {
 	/**
 	 * Timeout that gets called every few specified hours
 	 * @param callback Function to run every period of time
 	 * @returns Function the clears this current interval
 	 */
 	const func = (callback: InputFunction): TimeoutClearer => {
-		const interval = 60 * 60 * 1000 * triggerEvery
+		const interval = 60 * 60 * 1000 * trigger_every
 
 		const date = new Date()
 		const startDelay =
@@ -89,14 +89,14 @@ const hours = (triggerEvery: number) => {
 	return func
 }
 
-const days = (triggerEvery: number) => {
+const days = (trigger_every: number) => {
 	/**
 	 * Timeout that gets called every few specified days
 	 * @param callback Function to run every period of time
 	 * @returns Function the clears this current interval
 	 */
 	const func = (callback: InputFunction): TimeoutClearer => {
-		const interval = 24 * 60 * 60 * 1000 * triggerEvery
+		const interval = 24 * 60 * 60 * 1000 * trigger_every
 
 		const date = new Date()
 		const startDelay =
@@ -123,14 +123,14 @@ const days = (triggerEvery: number) => {
 
 /**
  * Function that gives access to all timers
- * @param tiggerEvery Trigger the function every few intervals
+ * @param trigger_every Trigger the function every few intervals
  * @returns The possible functions you can call for the intervals
  */
-const AfterEvery = (tiggerEvery: number) => ({
-	seconds: seconds(tiggerEvery),
-	minutes: minutes(tiggerEvery),
-	hours: hours(tiggerEvery),
-	days: days(tiggerEvery)
+const AfterEvery = (trigger_every: number) => ({
+	seconds: seconds(trigger_every),
+	minutes: minutes(trigger_every),
+	hours: hours(trigger_every),
+	days: days(trigger_every)
 })
 
 /**
